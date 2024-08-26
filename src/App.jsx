@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard/Dashboard';
 import SignupForm from './components/SignupForm/SignupForm';
 import SigninForm from './components/SigninForm/SigninForm';
 import BookList from './components/BookList/BookList';
+import BookDetails from './components/BookDetails/BookDetails';
 import * as authService from '../src/services/authService';
 import * as bookService from '../src/services/bookService'
 
@@ -37,6 +38,7 @@ const App = () => {
             <>
               <Route path="/" element={<Dashboard user={user} />} />
               <Route path="/books" element= {<BookList books={books} />} />
+              <Route path="/books/:bookId" element={<BookDetails />} />
             </>
           ) : (
             <Route path="/" element={<Landing />} />
