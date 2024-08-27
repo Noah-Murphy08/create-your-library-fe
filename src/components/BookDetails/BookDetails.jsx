@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { useState, useEffect, useContext } from "react"
 import * as bookService from '../../services/bookService'
 import CommentForm from "../CommentForm/CommentForm"
@@ -61,6 +61,7 @@ const BookDetails = (props) => {
                                 </p>
                                 {comment.owner._id === user._id && (
                                     <>
+                                        <Link to={`/books/${bookId}/comments/${comment._id}/edit`}>Edit Comment</Link>
                                         <button onClick={() => handleDeleteComment(comment._id)}>
                                             Delete Comment
                                         </button>

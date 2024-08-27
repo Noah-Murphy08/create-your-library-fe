@@ -8,6 +8,7 @@ import SigninForm from './components/SigninForm/SigninForm';
 import BookList from './components/BookList/BookList';
 import BookDetails from './components/BookDetails/BookDetails';
 import BookForm from './components/BookForm/BookForm';
+import CommentForm from './components/CommentForm/CommentForm';
 import * as authService from '../src/services/authService';
 import * as bookService from '../src/services/bookService';
 
@@ -49,6 +50,7 @@ const App = () => {
               <Route path="/books" element= {<BookList books={books} />} />
               <Route path="/books/:bookId" element={<BookDetails />} />
               <Route path="/books/new" element={<BookForm handleAddBook={handleAddBook} />} />
+              <Route path='/books/:bookId/comments/:commentId/edit' element={<CommentForm />} />
             </>
           ) : (
             <Route path="/" element={<Landing />} />
