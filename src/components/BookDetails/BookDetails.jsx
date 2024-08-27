@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom"
 import { useState, useEffect } from "react"
 import * as bookService from '../../services/bookService'
+import CommentForm from "../CommentForm/CommentForm"
 
 
 const BookDetails = (props) => {
@@ -15,6 +16,12 @@ const BookDetails = (props) => {
         }
         fetchBook()
     }, [bookId])
+
+    const handleAddComment = async (commentFormData) => {
+        const newComment = await bookService.createComment(bookId, commentFormData)
+        setBook({ ...book, comments: [...book.comments, newComment] })
+    }
+
     if (!book) return <main>Looking for Ohara Survivors...</main>
     return (
         <>
@@ -34,6 +41,7 @@ const BookDetails = (props) => {
                 </section>
                 <section>
                     <h2>Reviews</h2>
+                    <CommentForm handleAddComment={handleAddComment} />
                     {!book.comments.length && <p>There are no comments.</p>}
 
                     {book.comments.map((comment) => (
