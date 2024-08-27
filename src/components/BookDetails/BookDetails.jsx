@@ -1,12 +1,14 @@
 import { useParams } from "react-router-dom"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import * as bookService from '../../services/bookService'
 import CommentForm from "../CommentForm/CommentForm"
+import { AuthedUserContext } from "../../App"
 
 
 const BookDetails = (props) => {
     const [book, setBook] = useState(null)
 
+    const user  = useContext(AuthedUserContext)
     const { bookId } = useParams()
 
     useEffect(() => {
@@ -20,6 +22,13 @@ const BookDetails = (props) => {
     const handleAddComment = async (commentFormData) => {
         const newComment = await bookService.createComment(bookId, commentFormData)
         setBook({ ...book, comments: [...book.comments, newComment] })
+    }
+
+    const handleDeleteComment = async (commentId) => {
+        const deletedComment = await bookService.deleteComment(bookId, commentId)
+        setBook({ ...book,
+            comments: book.comments.filter((comment) => comment._id !== commentId)
+        })
     }
 
     if (!book) return <main>Looking for Ohara Survivors...</main>
@@ -50,6 +59,13 @@ const BookDetails = (props) => {
                                 <p>
                                     {comment.owner.username}'s post
                                 </p>
+                                {comment.owner._id === user._id && (
+                                    <>
+                                        <button onClick={() => handleDeleteComment(comment._id)}>
+                                            Delete Comment
+                                        </button>
+                                    </>
+                                )}
                             </header>
                             <p>{comment.text}</p>
                         </article>

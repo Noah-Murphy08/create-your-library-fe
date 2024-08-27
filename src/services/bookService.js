@@ -57,10 +57,26 @@ const createComment = async (bookId, CommentFormData) => {
     }
 }
 
+const deleteComment = async (bookId, commentId) => {
+    try {
+        const res = await fetch(`${BASE_URL}/${bookId}/comments/${commentId}`, {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        return res.json()
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 
 export {
     index,
     show,
     create,
     createComment,
+    deleteComment,
 }
