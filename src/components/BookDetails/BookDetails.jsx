@@ -25,7 +25,12 @@ const BookDetails = (props) => {
                     <p>Written by: {book.author}</p>
                 </header>
                 <section>
-                    <p>like and dislike buttons</p>
+                    <button type='submit'>
+                        Like
+                    </button>
+                    <button type='submit'>
+                        Dislike
+                    </button>
                 </section>
                 <section>
                     <h2>Reviews</h2>
