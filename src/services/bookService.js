@@ -88,6 +88,34 @@ const updateComment = async (bookId, commentId, commentFormData) => {
     }
 }
 
+const like = async (bookId, userId) => {
+    try {
+        const res = await fetch(`${BASE_URL}/${bookId}/like/${userId}`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+        return res.json()
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const dislike = async (bookId, userId) => {
+    try {
+        const res = await fetch(`${BASE_URL}/${bookId}/dislike/${userId}`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+        return res.json()
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 
 export {
     index,
@@ -96,5 +124,6 @@ export {
     createComment,
     deleteComment,
     updateComment,
-    
+    like,
+    dislike,
 }

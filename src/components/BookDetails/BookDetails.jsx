@@ -7,6 +7,9 @@ import { AuthedUserContext } from "../../App"
 
 const BookDetails = (props) => {
     const [book, setBook] = useState(null)
+    const [likeCount, setLikeCount] = useState(0)
+    const [dislikeCount, setDislikeCount] = useState(0)
+    const [clickedBtn, setClickedBtn] = useState('none')
 
     const user  = useContext(AuthedUserContext)
     const { bookId } = useParams()
@@ -15,9 +18,17 @@ const BookDetails = (props) => {
         const fetchBook = async () => {
             const bookData = await bookService.show(bookId)
             setBook(bookData)
+            setLikeCount(bookData.like.length)
+            setDislikeCount(bookData.dislike.length)
+
+            if(bookData.like.includes(user._id)) {
+                setClickedBtn('like')
+            } else if (bookData.like.includes(user._id)) {
+                setClickedBtn('dislike')
+            }
         }
         fetchBook()
-    }, [bookId])
+    }, [bookId, user._id])
 
     const handleAddComment = async (commentFormData) => {
         const newComment = await bookService.createComment(bookId, commentFormData)
@@ -31,6 +42,38 @@ const BookDetails = (props) => {
         })
     }
 
+    const handleClick = async (type) => {
+        if (type === 'like') {
+            const updateBookLike = await bookService.like(bookId, user._id)
+            setClickedBtn(clickedBtn === 'like' ? 'none' : 'like')
+            if (clickedBtn === 'like') {
+                setLikeCount(likeCount - 1)
+                setClickedBtn('none')
+            } else if (clickedBtn === 'dislike') {
+                setDislikeCount(dislikeCount - 1)
+                setLikeCount(likeCount + 1)
+                setClickedBtn('like')
+            } else {
+                setLikeCount(likeCount + 1)
+                setClickedBtn('like')
+            }
+        } else if (type === 'dislike') {
+            const updateBookDislike = await bookService.dislike(bookId, user._id)
+            setClickedBtn(clickedBtn === 'dislike' ? 'none' : 'dislike')
+            if (clickedBtn === 'dislike') {
+                setDislikeCount(dislikeCount - 1)
+                setClickedBtn('none')
+            } else if (clickedBtn === 'like') {
+                setLikeCount(likeCount - 1)
+                setDislikeCount(dislikeCount + 1)
+                setClickedBtn('dislike')
+            } else {
+                setDislikeCount(dislikeCount + 1)
+                setClickedBtn('dislike')
+            }
+        }
+    }
+
     if (!book) return <main>Looking for Ohara Survivors...</main>
     return (
         <>
@@ -41,11 +84,17 @@ const BookDetails = (props) => {
                     <p>Written by: {book.author}</p>
                 </header>
                 <section>
-                    <button type='submit'>
-                        Like
+                    <button
+                        className={`feelButton ${clickedBtn === 'like' ? 'like-clicked' : ''}`}
+                        onClick={() => handleClick('like')}
+                    >
+                        Like {likeCount}
                     </button>
-                    <button type='submit'>
-                        Dislike
+                    <button
+                        className={`feelButton ${clickedBtn === 'dislike' ? 'dislike-clicked' : ''}`}
+                        onClick={() => handleClick('dislike')}
+                    >
+                        Dislike {dislikeCount}
                     </button>
                 </section>
                 <section>
@@ -61,9 +110,9 @@ const BookDetails = (props) => {
                                 </p>
                                 {comment.owner._id === user._id && (
                                     <>
-                                        <Link to={`/books/${bookId}/comments/${comment._id}/edit`}>Edit Comment</Link>
+                                        <Link to={`/books/${bookId}/comments/${comment._id}/edit`}>Edit Review</Link>
                                         <button onClick={() => handleDeleteComment(comment._id)}>
-                                            Delete Comment
+                                            Delete Review
                                         </button>
                                     </>
                                 )}
