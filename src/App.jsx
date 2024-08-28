@@ -11,6 +11,7 @@ import BookForm from './components/BookForm/BookForm';
 import CommentForm from './components/CommentForm/CommentForm';
 import LibraryList from './components/LibraryList/LibraryList';
 import LibraryDetails from './components/LibraryDetails/LibraryDetails';
+import LibraryForm from './components/LibraryForm/LibraryForm';
 import * as authService from '../src/services/authService';
 import * as bookService from '../src/services/bookService';
 import * as libraryService from '../src/services/libraryService'
@@ -28,6 +29,12 @@ const App = () => {
     const newBook = await bookService.create(bookFormData)
     setBooks([newBook, ...books])
     navigate('/books')
+  }
+
+  const handleAddLibrary = async (libraryFormData) => {
+    const newLibrary = await libraryService.create(libraryFormData)
+    setLibraries([newLibrary, ...libraries])
+    navigate('/libraries')
   }
 
   useEffect(() => {
@@ -65,6 +72,7 @@ const App = () => {
               <Route path='/books/:bookId/comments/:commentId/edit' element={<CommentForm />} />
               <Route path='/libraries' element={<LibraryList libraries={libraries} />} />
               <Route path='/libraries/:libraryId' element={<LibraryDetails books={books} />} />
+              <Route path='/libraries/new' element={<LibraryForm books={books} handleAddLibrary={handleAddLibrary} />} />
             </>
           ) : (
             <Route path="/" element={<Landing />} />
