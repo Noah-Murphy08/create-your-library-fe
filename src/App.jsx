@@ -10,6 +10,7 @@ import BookDetails from './components/BookDetails/BookDetails';
 import BookForm from './components/BookForm/BookForm';
 import CommentForm from './components/CommentForm/CommentForm';
 import LibraryList from './components/LibraryList/LibraryList';
+import LibraryDetails from './components/LibraryDetails/LibraryDetails';
 import * as authService from '../src/services/authService';
 import * as bookService from '../src/services/bookService';
 import * as libraryService from '../src/services/libraryService'
@@ -62,7 +63,8 @@ const App = () => {
               <Route path="/books/:bookId" element={<BookDetails />} />
               <Route path="/books/new" element={<BookForm handleAddBook={handleAddBook} />} />
               <Route path='/books/:bookId/comments/:commentId/edit' element={<CommentForm />} />
-              <Route path='libraries' element={<LibraryList libraries={libraries} />} />
+              <Route path='/libraries' element={<LibraryList libraries={libraries} />} />
+              <Route path='/libraries/:libraryId' element={<LibraryDetails books={books} />} />
             </>
           ) : (
             <Route path="/" element={<Landing />} />
