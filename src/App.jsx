@@ -9,14 +9,17 @@ import BookList from './components/BookList/BookList';
 import BookDetails from './components/BookDetails/BookDetails';
 import BookForm from './components/BookForm/BookForm';
 import CommentForm from './components/CommentForm/CommentForm';
+import LibraryList from './components/LibraryList/LibraryList';
 import * as authService from '../src/services/authService';
 import * as bookService from '../src/services/bookService';
+import * as libraryService from '../src/services/libraryService'
 
 export const AuthedUserContext = createContext(null);
 
 const App = () => {
   const [user, setUser] = useState(authService.getUser());
   const [books, setBooks] = useState([])
+  const [libraries, setLibraries] = useState([])
 
   const navigate = useNavigate()
 
@@ -25,6 +28,14 @@ const App = () => {
     setBooks([newBook, ...books])
     navigate('/books')
   }
+
+  useEffect(() => {
+    const fetchAllLibraries = async () => {
+      const libraryData = await libraryService.index()
+      setLibraries(libraryData)
+    }
+    if (user) fetchAllLibraries()
+  }, [user])
 
   useEffect(() => {
     const fetchAllBooks = async () => {
@@ -51,6 +62,7 @@ const App = () => {
               <Route path="/books/:bookId" element={<BookDetails />} />
               <Route path="/books/new" element={<BookForm handleAddBook={handleAddBook} />} />
               <Route path='/books/:bookId/comments/:commentId/edit' element={<CommentForm />} />
+              <Route path='libraries' element={<LibraryList libraries={libraries} />} />
             </>
           ) : (
             <Route path="/" element={<Landing />} />
